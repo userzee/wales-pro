@@ -1,20 +1,31 @@
 /* ==========================================================================
-   1. Base Reset & Typography
+   1. Design Variables & Base Reset
    ========================================================================== */
-html {
-    scroll-behavior: smooth;
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --text-dark: #1f2937;
+    --text-light: #4b5563;
+    --text-muted: #9ca3af;
+    --bg-light: #f9f9f9;
+    --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-stack);
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -30,7 +41,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,23 +50,23 @@ header {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #2563eb;
+    color: var(--primary-color);
 }
 
 nav a {
     margin-left: 1.5rem;
     text-decoration: none;
-    color: #4b5563;
+    color: var(--text-light);
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: var(--transition-smooth);
 }
 
 nav a:hover {
-    color: #2563eb;
+    color: var(--primary-color);
 }
 
 /* ==========================================================================
-   3. Hero Section (100% Width, Full Vertical Visibility)
+   3. Hero Section
    ========================================================================== */
 .hero-bg-section {
     position: relative;
@@ -98,7 +109,7 @@ nav a:hover {
 }
 
 /* ==========================================================================
-   4. Slider Section (FIXED Standard Web Height & 100% Horizontal Width)
+   4. Image Banner Slider (Full-Width Segment)
    ========================================================================== */
 .slider-container {
     position: relative;
@@ -124,7 +135,7 @@ nav a:hover {
 .slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* CORRECTED: Fills full width seamlessly without squishing pixels */
+    object-fit: cover;
     display: block;
 }
 
@@ -153,7 +164,6 @@ nav a:hover {
     text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
 
-/* Slider Controls */
 .slider-btn {
     position: absolute;
     top: 50%;
@@ -165,19 +175,19 @@ nav a:hover {
     cursor: pointer;
     font-size: 1.2rem;
     border-radius: 50%;
-    transition: background 0.3s ease;
+    transition: var(--transition-smooth);
     z-index: 10;
 }
 
 .slider-btn:hover {
-    background: #2563eb;
+    background: var(--primary-color);
 }
 
 .prev { left: 25px; }
 .next { right: 25px; }
 
 /* ==========================================================================
-   5. Main Content Section
+   5. Main Static Content
    ========================================================================== */
 .content-section {
     max-width: 1200px;
@@ -189,18 +199,120 @@ nav a:hover {
 .content-section h2 {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
-    color: #1f2937;
+    color: var(--text-dark);
 }
 
 .content-section p {
     font-size: 1.1rem;
-    color: #6b7280;
+    color: var(--text-light);
     max-width: 800px;
     margin: 0 auto;
 }
 
 /* ==========================================================================
-   6. Footer Section
+   6. Card Slider (Services Showcase)
+   ========================================================================== */
+.slider-wrapper {
+    position: relative;
+    max-width: 1240px;
+    margin: 2rem auto;
+    padding: 0 50px;
+}
+
+.services-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+}
+
+.services-container::-webkit-scrollbar {
+    display: none;
+}
+
+.service-banner-box {
+    flex: 0 0 calc(33.333% - 14px);
+    min-width: 280px;
+    position: relative;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    color: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-smooth);
+}
+
+.service-banner-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+}
+
+.marketing-theme {
+    background: linear-gradient(135deg, #c01574 0%, #751062 100%);
+}
+
+.engineering-theme {
+    background: linear-gradient(135deg, #0d47a1 0%, #002171 100%);
+}
+
+.banner-inner-content h2 {
+    font-size: 2.2rem;
+    margin: 0.75rem 0 1.5rem 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.service-points {
+    list-style: none;
+}
+
+.service-points li {
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+/* Card Slider Directional Buttons */
+.slide-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #333;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+    transition: var(--transition-smooth);
+}
+
+.slide-arrow:hover { 
+    background-color: var(--primary-color); 
+}
+
+.prev-arrow { left: 5px; }
+.next-arrow { right: 5px; }
+
+/* ==========================================================================
+   7. Footer Section
    ========================================================================== */
 footer {
     background: #1f2937;
@@ -226,7 +338,7 @@ footer {
 
 .footer-section p, 
 .footer-section a {
-    color: #9ca3af;
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 0.9rem;
 }
@@ -239,69 +351,16 @@ footer {
     text-align: center;
     padding-top: 1.5rem;
     font-size: 0.85rem;
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 /* ==========================================================================
-   7. Service Blocks & Mobile Responsiveness
+   8. Media Queries (Unified Breakpoints)
    ========================================================================== */
-.services-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.service-banner-box {
-    position: relative;
-    border-radius: 12px;
-    padding: 3rem 2rem;
-    color: #ffffff;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.service-banner-box:hover {
-    transform: translateY(-5px);
-}
-
-.marketing-theme {
-    background: linear-gradient(135deg, #c01574 0%, #751062 100%);
-}
-
-.engineering-theme {
-    background: linear-gradient(135deg, #0d47a1 0%, #002171 100%);
-}
-
-.banner-inner-content h2 {
-    font-size: 2.2rem;
-    margin: 0.75rem 0 1.5rem 0;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.35rem 0.85rem;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.service-points {
-    list-style: none;
-}
-
-.service-points li {
-    font-size: 1.15rem;
-    margin-bottom: 0.8rem;
-    opacity: 0.95;
-    font-weight: 500;
+@media (max-width: 900px) {
+    .service-banner-box {
+        flex: 0 0 calc(50% - 10px); /* Display 2 cards on tablet layouts */
+    }
 }
 
 @media (max-width: 768px) {
@@ -321,11 +380,19 @@ footer {
     nav a {
         margin: 0 0.75rem;
     }
-    .services-container {
-        gap: 1.5rem;
-        margin: 1rem auto;
-    }
     .banner-inner-content h2 {
         font-size: 1.8rem;
+    }
+    .slider-wrapper {
+        padding: 0 20px;
+    }
+    .slide-arrow {
+        display: none; /* Hide hardware arrows on mobile; users can touch-swipe natively */
+    }
+}
+
+@media (max-width: 600px) {
+    .service-banner-box {
+        flex: 0 0 100%; /* Display 1 card cleanly on mobile targets */
     }
 }
