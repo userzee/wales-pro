@@ -1,105 +1,342 @@
+/* ==========================================================================
+   1. Base Reset & Typography
+   ========================================================================== */
+html {
+    scroll-behavior: smooth;
+}
+
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html, body {
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   2. Navigation Bar
+   ========================================================================== */
+header {
+    background: #ffffff;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+nav a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #4b5563;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* ==========================================================================
+   3. Hero Section (100% Width, Full Vertical Visibility)
+   ========================================================================== */
+.hero-bg-section {
+    position: relative;
     width: 100%;
-    background-color: #faf9f5;
-    overflow-x: hidden;
-    overflow-y: auto; 
-    font-family: system-ui, -apple-system, sans-serif;
+    background: #000;
+    overflow: hidden;
+    margin-bottom: 4rem; 
 }
 
-/* Main Top Screen Image Frame */
-.viewport-frame {
-    width: 100vw;
-    height: 100vh; /* Exactly the height of the screen view */
+.hero-fluid-img {
+    width: 100%;
+    height: auto; /* Scales perfectly without vertical crop or stretching */
     display: block;
+    /* opacity: 0.65;  */
 }
 
-.unclipped-flyer {
-    width: 100vw;       /* Forces the image to take exactly 100% width horizontally */
-    height: 100vh;      /* Forces the image to match the screen height precisely */
-    object-fit: fill;   /* Stretches the image data to fill the space with zero bottom crop */
-    display: block;
-}
-
-/* Custom Slider Styles */
-.slider-section {
-    max-width: 1000px;
-    margin: 4rem auto;
-    padding: 0 20px;
-}
-
-.slider-title {
-    color: #0b2d20;
-    margin-bottom: 1.5rem;
-    font-size: 1.75rem;
+.hero-text-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    color: #ffffff;
+    padding: 0 1.5rem;
+    width: 100%;
     text-align: center;
 }
 
-.custom-slider-container {
+.hero-text-wrapper h1 {
+    font-size: 3.2rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -1px;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.9);
+}
+
+.hero-text-wrapper p {
+    font-size: 1.3rem;
+    max-width: 650px;
+    margin: 0 auto;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+}
+
+/* ==========================================================================
+   4. Slider Section (FIXED Standard Web Height)
+   ========================================================================== */
+.slider-container {
     position: relative;
     width: 100%;
-    height: 400px;
-    border-radius: 12px;
+    height: 420px; /* FIXED STANDARD HEIGHT: Prevents giant scrolling images */
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    background: #111;
 }
 
-.custom-slider {
+.slides {
+    display: flex;
+    width: 200%; 
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
     position: relative;
-    width: 100%;
-    height: 100%;
 }
 
-.custom-slide {
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crops the edges cleanly to match the 420px height without distorting */
+    display: block;
+    /* opacity: 0.65; */
+}
+
+.slide-content {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.6s ease-in-out;
-    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #ffffff;
+    width: 85%;
+    z-index: 5;
 }
 
-.custom-slide.active {
-    opacity: 1;
-    z-index: 2;
+.slide-content h2 {
+    font-size: 2.8rem;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
 }
 
-.custom-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.slide-content p {
+    font-size: 1.2rem;
+    max-width: 650px;
+    margin: 0 auto;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
 
-/* Navigation Controls */
-.nav-btn {
+/* Slider Controls */
+.slider-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(11, 45, 32, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    font-size: 1.25rem;
+    padding: 1rem;
     cursor: pointer;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    transition: background 0.3s ease;
     z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
 }
 
-.nav-btn:hover {
-    background: rgba(11, 45, 32, 0.9);
+.slider-btn:hover {
+    background: #2563eb;
 }
 
-.prev-btn { left: 20px; }
-.next-btn { right: 20px; }
+.prev { left: 25px; }
+.next { right: 25px; }
+
+/* ==========================================================================
+   5. Main Content Section
+   ========================================================================== */
+.content-section {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.content-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.content-section p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   6. Footer Section
+   ========================================================================== */
+footer {
+    background: #1f2937;
+    color: #f3f4f6;
+    padding: 3rem 2rem 1.5rem 2rem;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #374151;
+}
+
+.footer-section h3 {
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.footer-section p, 
+.footer-section a {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer-section a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+/* ==========================================================================
+   7. Mobile Responsiveness
+   ========================================================================== */
+@media (max-width: 768px) {
+    .hero-bg-section { margin-bottom: 2rem; }
+    .hero-text-wrapper h1 { font-size: 1.8rem; }
+    .hero-text-wrapper p { font-size: 0.9rem; }
+    
+    .slider-container { height: 280px; } /* Shrinks standard height on mobile devices */
+    .slide-content h2 { font-size: 1.6rem; }
+    .slide-content p { font-size: 0.9rem; }
+    
+    header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    nav a {
+        margin: 0 0.75rem;
+    }
+}
+
+/* Container holding both service branches side-by-side */
+.services-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Individual Service Block Styling */
+.service-banner-box {
+    position: relative;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    color: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.service-banner-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Marketing Section Gradient (Matching your flyer's upper half) */
+.marketing-theme {
+    background: linear-gradient(135deg, #c01574 0%, #751062 100%);
+}
+
+/* Engineering Section Gradient (Matching your flyer's lower half) */
+.engineering-theme {
+    background: linear-gradient(135deg, #0d47a1 0%, #002171 100%);
+}
+
+/* Typography and List Configuration inside components */
+.banner-inner-content h2 {
+    font-size: 2.2rem;
+    margin: 0.75rem 0 1.5rem 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.service-points {
+    list-style: none;
+}
+
+.service-points li {
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+/* Mobile responsive optimization */
+@media (max-width: 768px) {
+    .services-container {
+        gap: 1.5rem;
+        margin: 1rem auto;
+    }
+    .banner-inner-content h2 {
+        font-size: 1.8rem;
+    }
+}

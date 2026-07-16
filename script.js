@@ -1,17 +1,17 @@
-const slides = document.querySelectorAll('.custom-slide');
+let currentSlide = 0;
+const totalSlides = 2; 
+const sliderElement = document.getElementById('slider');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-let currentIndex = 0;
 
-function changeSlide(index) {
-    slides[currentIndex].classList.remove('active');
-    currentIndex = (index + slides.length) % slides.length;
-    slides[currentIndex].classList.add('active');
+function moveSlide(direction) {
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+    sliderElement.style.transform = `translateX(-${currentSlide * (100 / totalSlides)}%)`;
 }
 
-nextBtn.addEventListener('click', () => changeSlide(currentIndex + 1));
-prevBtn.addEventListener('click', () => changeSlide(currentIndex - 1));
+prevBtn.addEventListener('click', () => moveSlide(-1));
+nextBtn.addEventListener('click', () => moveSlide(1));
 
 setInterval(() => {
-    changeSlide(currentIndex + 1);
-}, 4000);
+    moveSlide(1);
+}, 6000);

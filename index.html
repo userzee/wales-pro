@@ -4,30 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SA Global Corporation</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.ico">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Top Flyer Section: Locked to Full Window Width -->
-    <div class="viewport-frame">
-        <img src="flyer-bg.jpg" alt="SA Global Flyer Layout" class="unclipped-flyer">
-    </div>
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">SA Global</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#marketing-services">Marketing</a>
+            <a href="#engineering-services">Engineering</a>
+            <a href="#contact-section">Contact</a>
+        </nav>
+    </header>
 
-    <!-- 100% Custom Slider Section Below -->
-    <div class="slider-section">
-        <h2 class="slider-title">Our Recent Projects</h2>
-        
-        <div class="custom-slider-container">
-            <div class="custom-slider" id="slider">
-                <div class="custom-slide active"><img src="flyer-bg.jpg" alt="Project 1"></div>
-                <div class="custom-slide"><img src="flyer-bg.jpg" alt="Project 2"></div>
-                <div class="custom-slide"><img src="flyer-bg.jpg" alt="Project 3"></div>
-            </div>
-            <!-- Navigation Arrows -->
-            <button class="nav-btn prev-btn" id="prevBtn">❮</button>
-            <button class="nav-btn next-btn" id="nextBtn">❯</button>
+    <!-- Main Hero Banner Section -->
+    <div class="hero-bg-section">
+        <img src="images/flyer-bg.jpg" alt="SA Global Flyer Background" class="hero-fluid-img">
+        <div class="hero-text-wrapper">
+            <h1>Welcome To Our Agency</h1>
+            <p>We build professional, fast-loading, and completely customizable static digital landscapes.</p>
         </div>
     </div>
+
+    <!-- Image Slider Component (Standard Height Maintained) -->
+    <div class="slider-container">
+        <div class="slides" id="slider">
+            <div class="slide" id="marketing-services">
+                <img src="images/marketing-1.jpg" alt="Marketing Services">
+                <div class="slide-content">
+                    <h2>Marketing Services</h2>
+                    <p>Branding, Promotion, Ads, Web Development, and Social Media Management.</p>
+                </div>
+            </div>
+            <div class="slide" id="engineering-services">
+                <img src="images/slide2.jpg" alt="Engineering Services">
+                <div class="slide-content">
+                    <h2>Engineering Services</h2>
+                    <p>Expert Mechanical, Electrical, Plumbing, and Gardening solutions.</p>
+                </div>
+            </div>
+        </div>
+        <button class="slider-btn prev" id="prevBtn">&#10094;</button>
+        <button class="slider-btn next" id="nextBtn">&#10095;</button>
+    </div>
+
+    <!-- Responsive Services Banner Showcase -->
+    <div class="services-container">
+        <!-- Marketing Section Layout Wrapper -->
+        <div class="service-banner-box marketing-theme">
+            <div class="banner-inner-content">
+                <span class="badge">SA Global</span>
+                <h2>Marketing Services</h2>
+                <ul class="service-points">
+                    <li>🔹 Branding & Promotion</li>
+                    <li>🔹 High-Impact Advertising</li>
+                    <li>🔹 Web Development</li>
+                    <li>🔹 Social Media Management</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Engineering Section Layout Wrapper -->
+        <div class="service-banner-box engineering-theme">
+            <div class="banner-inner-content">
+                <span class="badge">SA Global</span>
+                <h2>Engineering Services</h2>
+                <ul class="service-points">
+                    <li>⚙️ Mechanical Operations</li>
+                    <li>⚙️ Electrical Systems</li>
+                    <li>⚙️ Plumbing Solutions</li>
+                    <li>⚙️ Gardening Care</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Page Content Section -->
+    <main class="content-section">
+        <h2>Crafting Premium Web Experiences</h2>
+        <p>
+            1. Content is under review 10 times.
+            2. Content is under review 10 times.
+            3. Content is under review 10 times.
+            4. Content is under review 10 times.
+            5. Content is under review 10 times.
+            6. Content is under review 10 times.
+            7. Content is under review 10 times.
+            8. Content is under review 10 times.
+            9. Content is under review 10 times.
+            10. Content is under review 10 times.
+        </p>
+    </main>
+
+    <!-- Footer Content -->
+    <footer id="contact-section">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About SA Global</h3>
+                <p>Providing top-tier Marketing and Engineering services tailored to help your business grow efficiently.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <p><a href="#">Privacy Policy</a></p>
+                <p><a href="#">Terms of Service</a></p>
+                <p><a href="#">Support Hub</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Area Wales</h3>
+                <p>Email: no-one@saglobal.com</p>
+                <p>Phone: 07593985667</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 SA Global Corporation. All rights reserved.
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
