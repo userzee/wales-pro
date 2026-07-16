@@ -1,26 +1,24 @@
 // Wait until the entire webpage is completely loaded before running the slider code
 document.addEventListener('DOMContentLoaded', () => {
     
-    const slides = document.querySelectorAll('.custom-slide');
+    const slider = document.getElementById('slider'); 
+    const slides = document.querySelectorAll('.slide');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     let currentIndex = 0;
 
-    // Safety Check: If there are no slides found on the page, stop the script to prevent errors
-    if (slides.length === 0) {
-        console.error("Slider Error: No elements with class '.custom-slide' were found in the HTML.");
+    // Safety Check
+    if (slides.length === 0 || !slider) {
+        console.error("Slider Error: Crucial slider tracks or elements were not found in the HTML.");
         return;
     }
 
     function changeSlide(index) {
-        // Remove active class from the current slide
-        slides[currentIndex].classList.remove('active');
-        
         // Calculate the next index wrap-around safely
         currentIndex = (index + slides.length) % slides.length;
         
-        // Add active class to the new slide
-        slides[currentIndex].classList.add('active');
+        // MOVES TRACK: Translates track across X plane relative to total active slide count
+        slider.style.transform = `translateX(-${currentIndex * (100 / slides.length)}%)`;
     }
 
     // Button Click Events
