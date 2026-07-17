@@ -1,101 +1,156 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize both sliders independently
-    initImageSlider();
-    initCardSlider();
+    initMainHeroImageSlider();
+    initBottomCardsCarouselSlider();
+    initMobileMenu();
 });
 
 /**
- * Component 1: Top Hero/Image Banner Slider (Full-Width Translation)
+ * Controller for Top Image Slider (Dynamic pixel width tracking and touch swiping)
  */
-function initImageSlider() {
-    const slider = document.getElementById('slider'); 
-    const slides = document.querySelectorAll('.slide');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let currentIndex = 0;
-    let autoPlayTimer;
+function initMainHeroImageSlider() {
+    const sliderTrack = document.getElementById('slider');
+    const totalSlides = document.querySelectorAll('.slide');
+    const buttonPrev = document.getElementById('prevBtn');
+    const buttonNext = document.getElementById('nextBtn');
+    
+    let activeIndex = 0;
+    let autoTimer;
 
-    // Safety check to prevent errors if elements do not exist on the current page
-    if (!slider || slides.length === 0) {
-        console.warn("Image Slider Warning: Essential elements missing from HTML template.");
-        return;
-    }
+    if (!sliderTrack || totalSlides.length === 0) return;
 
-    function changeSlide(index) {
-        // Calculate the next index wrap-around cleanly
-        currentIndex = (index + slides.length) % slides.length;
+    function moveToSlide(targetIndex) {
+        activeIndex = (targetIndex + totalSlides.length) % totalSlides.length;
         
-        // Moves the track across the X-axis relative to total active slide count
-        slider.style.transform = `translateX(-${currentIndex * (100 / slides.length)}%)`;
+        // Grab the precise pixel width dynamically to avoid percentage shifting bugs
+        const slideWidth = sliderTrack.parentElement.clientWidth;
+        sliderTrack.style.transform = `translateX(-${activeIndex * slideWidth}px)`;
     }
 
-    // Button event listeners
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            changeSlide(currentIndex + 1);
-            resetAutoPlay();
-        });
+    if (buttonNext) {
+        buttonNext.addEventListener('click', () => { moveToSlide(activeIndex + 1); startLoop(); });
     }
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            changeSlide(currentIndex - 1);
-            resetAutoPlay();
-        });
+    if (buttonPrev) {
+        buttonPrev.addEventListener('click', () => { moveToSlide(activeIndex - 1); startLoop(); });
     }
 
-    // Automatic transition interval management
-    function startAutoPlay() {
-        autoPlayTimer = setInterval(() => {
-            changeSlide(currentIndex + 1);
-        }, 4000);
+    // Enhanced Real-Time Touch Support Configuration for Mobile Swipe
+    let xStart = 0;
+    let yStart = 0;
+    let xDiff = 0;
+    let yDiff = 0;
+
+    sliderTrack.addEventListener('touchstart', (e) => {
+        xStart = e.touches[0].clientX;
+        yStart = e.touches[0].clientY;
+        xDiff = 0;
+        yDiff = 0;
+        clearInterval(autoTimer);
+    }, { passive: true });
+
+    sliderTrack.addEventListener('touchmove', (e) => {
+        if (!xStart || !yStart) return;
+
+        const xCurrent = e.touches[0].clientX;
+        const yCurrent = e.touches[0].clientY;
+
+        xDiff = xStart - xCurrent;
+        yDiff = yStart - yCurrent;
+    }, { passive: true });
+
+    sliderTrack.addEventListener('touchend', () => {
+        const swipeThreshold = 50; // Minimum drag length in pixels required to trigger slide change
+
+        // Evaluates whether horizontal swipe gesture is distinct from vertical scrolling
+        if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > swipeThreshold) {
+            if (xDiff > 0) {
+                moveToSlide(activeIndex + 1); // Swiped Left -> Load Next Slide
+            } else {
+                moveToSlide(activeIndex - 1); // Swiped Right -> Load Previous Slide
+            }
+        }
+
+        // Reset tracking metrics and restart slider interval loops
+        xStart = 0;
+        yStart = 0;
+        startLoop();
+    }, { passive: true });
+
+    function startLoop() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => moveToSlide(activeIndex + 1), 4000);
     }
 
-    function stopAutoPlay() {
-        clearInterval(autoPlayTimer);
-    }
-
-    function resetAutoPlay() {
-        stopAutoPlay();
-        startAutoPlay();
-    }
-
-    // Pause automation on hover for better user accessibility
-    slider.parentElement.addEventListener('mouseenter', stopAutoPlay);
-    slider.parentElement.addEventListener('mouseleave', startAutoPlay);
-
-    // Run autoplay on load
-    startAutoPlay();
-    console.log(`Image slider running smoothly with ${slides.length} nodes.`);
+    sliderTrack.parentElement.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    sliderTrack.parentElement.addEventListener('mouseleave', startLoop);
+    
+    // Tracks device orientations cleanly on screen resize
+    window.addEventListener('resize', () => {
+        moveToSlide(activeIndex);
+    });
+    
+    startLoop();
 }
 
 /**
- * Component 2: Bottom Services Card Slider (Horizontal Scroll)
+ * Controller for Bottom Horizontal Card Slider
  */
-function initCardSlider() {
-    const cardTrack = document.getElementById("services-slider");
-    const nextCardBtn = document.getElementById("slide-next");
-    const prevCardBtn = document.getElementById("slide-prev");
+function initBottomCardsCarouselSlider() {
+    const cardScrollContainer = document.getElementById("services-slider");
+    const arrowNext = document.getElementById("slide-next");
+    const arrowPrev = document.getElementById("slide-prev");
 
-    if (!cardTrack || !nextCardBtn || !prevCardBtn) {
-        console.warn("Card Slider Warning: Navigation buttons or scroll track container missing.");
-        return;
-    }
+    if (!cardScrollContainer || !arrowNext || !arrowPrev) return;
 
-    // Helper function to calculate active card step width dynamically on resize
-    function getScrollStep() {
-        const structuralCard = cardTrack.querySelector(".service-banner-box");
-        if (!structuralCard) return 300; // Fallback pixel width
+    function calculateScrollOffset() {
+        const structuralCard = cardScrollContainer.querySelector(".service-banner-box");
+        if (!structuralCard) return 300;
         
-        // Measures card viewport footprint plus the layout grid gap (20px)
-        return structuralCard.clientWidth + 20;
+        const runtimeStyle = window.getComputedStyle(cardScrollContainer);
+        const gridGap = parseInt(runtimeStyle.gap) || 20;
+        
+        return structuralCard.getBoundingClientRect().width + gridGap;
     }
 
-    // Scroll click actions
-    nextCardBtn.addEventListener("click", () => {
-        cardTrack.scrollLeft += getScrollStep();
+    arrowNext.addEventListener("click", () => {
+        cardScrollContainer.scrollBy({ left: calculateScrollOffset(), behavior: 'smooth' });
     });
 
-    prevCardBtn.addEventListener("click", () => {
-        cardTrack.scrollLeft -= getScrollStep();
+    arrowPrev.addEventListener("click", () => {
+        cardScrollContainer.scrollBy({ left: -calculateScrollOffset(), behavior: 'smooth' });
+    });
+}
+
+/**
+ * Controller for Mobile Hamburger Dropdown Menu (Injects burger bars automatically)
+ */
+function initMobileMenu() {
+    const header = document.querySelector('header');
+    const navMenu = document.querySelector('nav');
+    
+    if (!header || !navMenu) return;
+
+    // Creates the burger toggle button dynamically so your HTML doesn't change
+    let menuToggle = document.getElementById('menuToggle');
+    if (!menuToggle) {
+        menuToggle = document.createElement('button');
+        menuToggle.id = 'menuToggle';
+        menuToggle.className = 'menu-toggle';
+        menuToggle.setAttribute('aria-label', 'Toggle Navigation');
+        menuToggle.innerHTML = '<span></span><span></span><span></span>';
+        header.insertBefore(menuToggle, navMenu);
+    }
+
+    const navLinks = navMenu.querySelectorAll('a');
+
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navMenu.classList.toggle('open');
+    });
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            menuToggle.classList.remove('active');
+            navMenu.classList.remove('open');
+        });
     });
 }
