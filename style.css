@@ -1,22 +1,11 @@
 /* ==========================================================================
-   1. Design Variables & Base Reset
+   1. Base Reset & Layout Security
    ========================================================================== */
-:root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --text-dark: #1f2937;
-    --text-light: #4b5563;
-    --text-muted: #9ca3af;
-    --bg-light: #f9f9f9;
-    --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: var(--font-stack);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 html {
@@ -24,16 +13,18 @@ html {
 }
 
 body {
-    background-color: var(--bg-light);
-    color: var(--text-dark);
+    background-color: #f9f9f9;
+    color: #333;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden; /* Stops horizontal canvas broken scaling */
 }
 
 /* ==========================================================================
-   2. Navigation Bar
+   2. Header Navigation Layout
    ========================================================================== */
 header {
     background: #ffffff;
@@ -41,32 +32,65 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: #2563eb;
+    white-space: nowrap;
+}
+
+nav {
+    display: flex;
+    align-items: center;
 }
 
 nav a {
     margin-left: 1.5rem;
     text-decoration: none;
-    color: var(--text-light);
+    color: #4b5563;
     font-weight: 500;
-    transition: var(--transition-smooth);
+    transition: color 0.3s ease;
 }
 
 nav a:hover {
-    color: var(--primary-color);
+    color: #2563eb;
 }
 
+/* Mobile Menu Hamburger Button Core Styling */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 0;
+}
+
+.menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Morph transformations when burger button state shifts to active */
+.menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
 /* ==========================================================================
-   3. Hero Section
+   3. Main Hero Banner Section
    ========================================================================== */
 .hero-bg-section {
     position: relative;
@@ -79,7 +103,10 @@ nav a:hover {
 .hero-fluid-img {
     width: 100%;
     height: auto;
+    min-height: 240px; 
+    object-fit: cover;
     display: block;
+    /* opacity: 0.8; */
 }
 
 .hero-text-wrapper {
@@ -95,21 +122,21 @@ nav a:hover {
 }
 
 .hero-text-wrapper h1 {
-    font-size: 3.2rem;
+    font-size: clamp(1.8rem, 5vw, 3.2rem); 
     margin-bottom: 0.75rem;
     letter-spacing: -1px;
     text-shadow: 0 3px 12px rgba(0,0,0,0.9);
 }
 
 .hero-text-wrapper p {
-    font-size: 1.3rem;
+    font-size: clamp(0.95rem, 2vw, 1.3rem);
     max-width: 650px;
     margin: 0 auto;
     text-shadow: 0 2px 6px rgba(0,0,0,0.9);
 }
 
 /* ==========================================================================
-   4. Image Banner Slider (Full-Width Segment)
+   4. FIXED Image Slider Container (Resilient to 768px and below viewports)
    ========================================================================== */
 .slider-container {
     position: relative;
@@ -121,13 +148,17 @@ nav a:hover {
 
 .slides {
     display: flex;
-    width: 200%; 
+    width: 100%; 
     height: 100%;
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+    touch-action: pan-y; /* CRITICAL: Enables seamless left/right mobile swiping while keeping page scrolling smooth */
 }
 
 .slide {
-    width: 100%;
+    width: 100%; 
+    flex: 0 0 100%; /* Force calculation isolation on mobile engines */
+    max-width: 100%;
     height: 100%;
     position: relative;
 }
@@ -135,30 +166,37 @@ nav a:hover {
 .slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; 
     display: block;
 }
 
 .slide-content {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     color: #ffffff;
-    width: 85%;
+    padding: 0 1.5rem;
     z-index: 5;
+    box-sizing: border-box;
 }
 
 .slide-content h2 {
-    font-size: 2.8rem;
+    font-size: clamp(1.4rem, 4vw, 2.8rem);
     margin-bottom: 0.75rem;
     font-weight: 700;
     text-shadow: 0 2px 10px rgba(0,0,0,0.7);
 }
 
 .slide-content p {
-    font-size: 1.2rem;
+    font-size: clamp(0.85rem, 2vw, 1.2rem);
     max-width: 650px;
     margin: 0 auto;
     text-shadow: 0 2px 6px rgba(0,0,0,0.7);
@@ -171,98 +209,46 @@ nav a:hover {
     background: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
-    padding: 1rem;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
     font-size: 1.2rem;
     border-radius: 50%;
-    transition: var(--transition-smooth);
+    transition: background 0.3s ease;
     z-index: 10;
-}
-
-.slider-btn:hover {
-    background: var(--primary-color);
-}
-
-.prev { left: 25px; }
-.next { right: 25px; }
-
-/* ==========================================================================
-   5. Main Static Content
-   ========================================================================== */
-.content-section {
-    max-width: 1200px;
-    margin: 4rem auto;
-    padding: 0 2rem;
-    text-align: center;
-}
-
-.content-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--text-dark);
-}
-
-.content-section p {
-    font-size: 1.1rem;
-    color: var(--text-light);
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* ==========================================================================
-   6. Card Slider (Services Showcase)
-   ========================================================================== */
-.slider-wrapper {
-    position: relative;
-    max-width: 1240px;
-    margin: 2rem auto;
-    padding: 0 50px;
-}
-
-.services-container {
     display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 20px 0;
-    -ms-overflow-style: none;  
-    scrollbar-width: none;  
+    align-items: center;
+    justify-content: center;
 }
 
-.services-container::-webkit-scrollbar {
-    display: none;
-}
+.slider-btn:hover { background: #2563eb; }
+.prev { left: 20px; }
+.next { right: 20px; }
 
+/* ==========================================================================
+   5. General Service Cards Layout Configuration
+   ========================================================================== */
 .service-banner-box {
-    flex: 0 0 calc(33.333% - 14px);
-    min-width: 280px;
     position: relative;
     border-radius: 12px;
     padding: 3rem 2rem;
     color: #ffffff;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: var(--transition-smooth);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .service-banner-box:hover {
     transform: translateY(-5px);
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
 }
 
-.marketing-theme {
-    background: linear-gradient(135deg, #c01574 0%, #751062 100%);
-}
-
-.engineering-theme {
-    background: linear-gradient(135deg, #0d47a1 0%, #002171 100%);
-}
+.marketing-theme { background: linear-gradient(135deg, #c01574 0%, #751062 100%); }
+.engineering-theme { background: linear-gradient(135deg, #0d47a1 0%, #002171 100%); }
 
 .banner-inner-content h2 {
     font-size: 2.2rem;
     margin: 0.75rem 0 1.5rem 0;
     font-weight: 700;
-    letter-spacing: -0.5px;
 }
 
 .badge {
@@ -276,18 +262,54 @@ nav a:hover {
     letter-spacing: 1px;
 }
 
-.service-points {
-    list-style: none;
-}
-
+.service-points { list-style: none; }
 .service-points li {
     font-size: 1.15rem;
     margin-bottom: 0.8rem;
-    opacity: 0.95;
-    font-weight: 500;
+    /* opacity: 0.95; */
 }
 
-/* Card Slider Directional Buttons */
+/* TARGET A: Styling the First (Static Grid) container section explicitly */
+body > .services-container {
+    max-width: 1200px;
+    margin: 2rem auto 4rem auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+}
+
+/* TARGET B: Styling the Second (Horizontal Slider) container via its wrapper parent class */
+.slider-wrapper {
+    position: relative;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 45px;
+    width: 100%;
+}
+
+.slider-wrapper .services-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+    width: 100%;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+}
+
+.slider-wrapper .services-container::-webkit-scrollbar {
+    display: none;
+}
+
+.slider-wrapper .service-banner-box {
+    flex: 0 0 calc(33.333% - 14px); 
+    min-width: 280px; 
+}
+
+/* Slider Controls Hardware navigation buttons */
 .slide-arrow {
     position: absolute;
     top: 50%;
@@ -301,46 +323,74 @@ nav a:hover {
     cursor: pointer;
     font-size: 18px;
     z-index: 10;
-    transition: var(--transition-smooth);
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.slide-arrow:hover { 
-    background-color: var(--primary-color); 
-}
-
-.prev-arrow { left: 5px; }
-.next-arrow { right: 5px; }
+.slide-arrow:hover { background-color: #2563eb; }
+.prev-arrow { left: 0; }
+.next-arrow { right: 0; }
 
 /* ==========================================================================
-   7. Footer Section
+   6. Core Page Text Content Styling
+   ========================================================================== */
+.content-section {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    text-align: center;
+    width: 100%;
+}
+
+.content-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.content-section p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   7. Complete Footer Layout Security
    ========================================================================== */
 footer {
     background: #1f2937;
     color: #f3f4f6;
     padding: 3rem 2rem 1.5rem 2rem;
     margin-top: auto;
+    width: 100%; 
+    box-sizing: border-box;
 }
 
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
     gap: 2rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid #374151;
+    width: 100%;
 }
 
 .footer-section h3 {
     margin-bottom: 1rem;
     color: #fff;
+    font-size: 1.2rem;
 }
 
 .footer-section p, 
 .footer-section a {
-    color: var(--text-muted);
+    color: #9ca3af;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .footer-section a:hover {
@@ -351,48 +401,96 @@ footer {
     text-align: center;
     padding-top: 1.5rem;
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: #9ca3af;
+    width: 100%;
 }
 
 /* ==========================================================================
-   8. Media Queries (Unified Breakpoints)
+   8. Viewport Resolution Adaptations
    ========================================================================== */
-@media (max-width: 900px) {
-    .service-banner-box {
-        flex: 0 0 calc(50% - 10px); /* Display 2 cards on tablet layouts */
+@media (max-width: 1024px) {
+    .slider-wrapper .service-banner-box {
+        flex: 0 0 calc(50% - 10px); 
     }
 }
 
-@media (max-width: 768px) {
-    .hero-bg-section { margin-bottom: 2rem; }
-    .hero-text-wrapper h1 { font-size: 1.8rem; }
-    .hero-text-wrapper p { font-size: 0.9rem; }
-    
-    .slider-container { height: 280px; } 
-    .slide-content h2 { font-size: 1.6rem; }
-    .slide-content p { font-size: 0.9rem; }
-    
-    header {
+@media (max-width: 768px), (max-height: 650px) {
+    .slider-container {
+        height: 300px; /* Enforce fluid vertical heights on small screen targets */
+    }
+
+    .menu-toggle {
+        display: flex; /* Shows burger lines instantly on mobile formats */
+    }
+    /* Converts nav container into a vertical dropdown overlay */
+    nav {
+        position: fixed;
+        top: 60px; /* Sits below the header bar space boundary lines */
+        left: 0;
+        width: 100%;
+        height: 0; /* Hidden by default */
+        background-color: #ffffff;
         flex-direction: column;
-        gap: 1rem;
+        justify-content: flex-start;
+        align-items: center;
+        overflow: hidden;
+        transition: height 0.4s ease-in-out, opacity 0.3s ease;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+        z-index: 999;
+        opacity: 0;
+    }
+
+    /* When menu has the 'open' class injected by JS */
+    nav.open {
+        height: auto;
+        padding: 2rem 0;
+        opacity: 1;
+    }
+
+    nav a {
+        margin: 1.25rem 0 !important;
+        font-size: 1.2rem;
+        display: block;
+        width: 100%;
         text-align: center;
     }
-    nav a {
-        margin: 0 0.75rem;
+
+    header {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 0 !important;
     }
-    .banner-inner-content h2 {
-        font-size: 1.8rem;
+
+    .hero-bg-section { 
+        margin-bottom: 2rem; 
     }
-    .slider-wrapper {
-        padding: 0 20px;
+
+    .banner-inner-content h2 { 
+        font-size: 1.8rem; 
     }
-    .slide-arrow {
-        display: none; /* Hide hardware arrows on mobile; users can touch-swipe natively */
+
+    .slider-wrapper { 
+        padding: 0 15px; 
+    }
+
+    /* Mobile users touch-swipe panels natively */
+    .slide-arrow, 
+    .slider-btn { 
+        display: none; 
+    } 
+
+    .slider-wrapper .service-banner-box {
+        flex: 0 0 85%;
+    }
+
+    footer {
+        padding: 2rem 1rem 1.5rem 1rem;
     }
 }
 
-@media (max-width: 600px) {
-    .service-banner-box {
-        flex: 0 0 100%; /* Display 1 card cleanly on mobile targets */
+@media (max-width: 480px) {
+    .slider-wrapper .service-banner-box {
+        flex: 0 0 100%;
     }
 }
