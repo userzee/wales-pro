@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "wales-pro",
+  "name": "wales-pro-prod",
   "compatibility_date": "2026-07-17",
   "observability": {
     "enabled": true
